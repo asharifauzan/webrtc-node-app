@@ -31,9 +31,13 @@ const iceServers = {
 }
 
 // BUTTON LISTENER ============================================================
-connectButton.addEventListener('click', () => {
-  joinRoom(roomInput.value)
-})
+// connectButton.addEventListener('click', () => {
+//   joinRoom(roomInput.value)
+// })
+document.body.onload = ()=> {
+  joinRoom(ROOM_ID)
+}
+
 
 // SOCKET EVENT CALLBACKS =====================================================
 socket.on('room_created', async () => {
@@ -110,7 +114,6 @@ function joinRoom(room) {
 }
 
 function showVideoConference() {
-  roomSelectionContainer.style = 'display: none'
   videoChatContainer.style = 'display: block'
 }
 

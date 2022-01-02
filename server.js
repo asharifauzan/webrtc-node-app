@@ -3,7 +3,12 @@ const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 
-app.use('/', express.static('public'))
+app.use(express.static('public'))
+app.set('view engine', 'ejs')
+
+app.get('/:room', (req, res)=> {
+  res.render('room', { room: req.params.room })
+})
 
 io.on('connection', (socket) => {
   socket.on('join', (roomId) => {

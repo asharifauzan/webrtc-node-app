@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebRTC</title>
+
+    <link rel="stylesheet" href="style.css">
+    </style>
+  </head>
+
+  <body>
+    <div id="video-chat-container" class="video-position" style="display: none">
+      <video id="local-video" autoplay="autoplay" muted="muted"></video>
+      <video id="remote-video" autoplay="autoplay"></video>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const ROOM_ID = "<%= room %>"
+    </script>
+    <script type="text/javascript" src="script.js"></script>
+  </body>
+</html>
