@@ -1,16 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WebRTC</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@1.21.0/dist/full.css" rel="stylesheet" type="text/css" />
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" type="text/css" />
-    </style>
-  </head>
+<%- include('partials/header') %> 
 
-  <body>
     <%- include('partials/navbar'), { room }  %> 
     <div id="video-chat-container" class="video-position" style="display: none">
       <video id="local-video" class="rounded-lg" autoplay="autoplay" muted="muted"></video>
@@ -22,5 +11,5 @@
       const ROOM_ID = "<%= room %>"
     </script>
     <script type="text/javascript" src="script.js"></script>
-  </body>
-</html>
+    
+<%- include('partials/footer')  %> 
