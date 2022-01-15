@@ -47,6 +47,16 @@ io.on('connection', (socket) => {
     console.log(`Broadcasting webrtc_ice_candidate event to peers in room ${event.roomId}`)
     socket.broadcast.to(event.roomId).emit('webrtc_ice_candidate', event)
   })
+
+  // Handle client disconnect
+  socket.on('disconnect', ()=> {
+    console.log(socket.id, " is left")
+  })
+
+  socket.on('leave-room', roomId=> {
+    socket.leave(roomId)
+    socket.broadcast.to(roomId).emit('user-left', socket.id)
+  })
 })
 
 // START THE SERVER =================================================================

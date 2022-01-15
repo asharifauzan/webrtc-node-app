@@ -7,6 +7,8 @@ const videoChatContainer = document.getElementById('video-chat-container')
 const localVideoComponent = document.getElementById('local-video')
 const remoteVideoComponent = document.getElementById('remote-video')
 
+const leaveButton = document.getElementById('leave-room')
+
 // Variables.
 const socket = io()
 const mediaConstraints = {
@@ -45,6 +47,11 @@ socket.on('room_created', async () => {
 
   await setLocalStream(mediaConstraints)
   isRoomCreator = true
+})
+
+socket.on('user-left', remoteId=> {
+  alert(remoteId + " telah keluar dari room")
+  remoteVideoComponent.srcObject = null
 })
 
 socket.on('room_joined', async () => {
@@ -102,6 +109,11 @@ socket.on('webrtc_ice_candidate', (event) => {
   rtcPeerConnection.addIceCandidate(candidate)
 })
 
+leaveButton.onclick = function() {
+    socket.emit('leave-room', ROOM_ID)
+    leaveRoom()    
+}
+
 // FUNCTIONS ==================================================================
 function joinRoom(room) {
   if (room === '') {
@@ -115,6 +127,12 @@ function joinRoom(room) {
 
 function showVideoConference() {
   videoChatContainer.style = 'display: block'
+}
+
+function leaveRoom() {
+    rtcPeerConnection ? rtcPeerConnection.close() : null
+    localStream.getTracks().forEach(track=> track.stop())
+    window.location = "dashboard"
 }
 
 async function setLocalStream(mediaConstraints) {
