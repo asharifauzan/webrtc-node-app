@@ -1,10 +1,20 @@
 const express = require('express')
 const app = express()
+const cookieParser = require("cookie-parser")
+const sessions = require('express-session')
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 const bcrypt = require('bcrypt')
 const connection = require('./config/database')
 
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(sessions({
+    secret: "KR4KENwebrtc;",
+    saveUninitialized:true,
+    cookie: { maxAge: oneDay },
+    resave: false 
+}))
+app.use(cookieParser())
 app.use(require('body-parser').urlencoded({ extended: false }));
 app.use(express.static('public'))
 app.set('view engine', 'ejs')
@@ -16,11 +26,19 @@ app.get('/', (req, res)=> {
 })
 
 app.get('/login', (req, res)=> {
-  res.render('home')
+  if (typeof req.session.user === "undefined") {
+    res.render('home')
+  } else {
+    res.redirect('dashboard')
+  }
 })
 
 app.get('/register', (req, res)=> {
-  res.render('register')
+  if (typeof req.session.user === "undefined") {
+    res.render('register')
+  } else {
+    res.redirect('dashboard')
+  }
 })
 
 app.post('/login', async (req, res)=> {
@@ -37,6 +55,11 @@ app.post('/login', async (req, res)=> {
       const correct = await bcrypt.compare(password, results[0].password)
       
       if (correct) {
+        const session = req.session
+        session.user = {}
+        session.user.username = username
+        session.user.id = results[0].id
+            
         res.redirect('dashboard')
       } else {
         const msg = "Username or Password Incorrect"
@@ -65,6 +88,11 @@ app.post('/register', async (req, res)=> {
           res.render('register', { message: msg })
         }
 
+        const session = req.session
+        session.user = {}
+        session.user.username = username
+        session.user.id = results.insertId
+        
         res.redirect('dashboard')
       })
     }
@@ -72,7 +100,11 @@ app.post('/register', async (req, res)=> {
 })
 
 app.get('/dashboard', (req, res)=> {
-  res.render('dashboard')
+  if (typeof req.session.user === "undefined") {
+    res.redirect('/')
+  } else {
+    res.render('dashboard')
+  }
 })
 
 app.get('/:room', (req, res)=> {
