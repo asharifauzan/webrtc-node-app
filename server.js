@@ -103,7 +103,15 @@ app.get('/dashboard', (req, res)=> {
   if (typeof req.session.user === "undefined") {
     res.redirect('/')
   } else {
-    res.render('dashboard')
+
+    const id_user = req.session.user.id
+    connection.query(`SELECT room.id, user.username, room.room_name FROM user INNER JOIN room ON user.id = room.id_user WHERE user.id = '${id_user}'`, (err, results)=> {
+      if (err) {
+        const msg = err
+        res.render('dashboard', { message: msg })
+      }
+      res.render('dashboard', { rooms: results })
+    })
   }
 })
 
