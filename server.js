@@ -107,6 +107,20 @@ app.get('/dashboard', (req, res)=> {
   }
 })
 
+app.post('/room', (req, res)=> {
+  const { room } = req.body
+  const id_user = req.session.user.id
+  connection.query(`INSERT INTO room VALUES (NULL, '${id_user}', '${room}')`, (err, results)=> {
+    if (err) {
+      const msg = err
+      res.render('dashboard', { message: msg })
+    }
+
+    // TODO: create room name validation for duplicate
+    res.redirect('dashboard')
+  })
+})
+
 app.get('/:room', (req, res)=> {
   res.render('room', { room: req.params.room })
 })
