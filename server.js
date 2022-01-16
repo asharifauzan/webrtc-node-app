@@ -11,8 +11,43 @@ app.set('view engine', 'ejs')
 
 connection.connect()
 
+app.get('/', (req, res)=> {
+  res.redirect('login')
+})
+
+app.get('/login', (req, res)=> {
+  res.render('home')
+})
+
 app.get('/register', (req, res)=> {
   res.render('register')
+})
+
+app.post('/login', async (req, res)=> {
+  const { username, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 12)
+
+  connection.query(`SELECT * FROM user WHERE username = '${username}'`, async (err, results) => {
+    if (err) {
+      const msg = err
+      res.render('home', { message: msg })
+    }
+    
+    if (results.length > 0) {
+      const correct = await bcrypt.compare(password, results[0].password)
+      
+      if (correct) {
+        res.redirect('dashboard')
+      } else {
+        const msg = "Username or Password Incorrect"
+        res.render('home', { message: msg })
+      }
+
+    } else {
+      const msg = "Username or Password Incorrect"
+      res.render('home', { message: msg })
+    }
+  })
 })
 
 app.post('/register', async (req, res)=> {
@@ -34,6 +69,10 @@ app.post('/register', async (req, res)=> {
       })
     }
   })
+})
+
+app.get('/dashboard', (req, res)=> {
+  res.render('dashboard')
 })
 
 app.get('/:room', (req, res)=> {
