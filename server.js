@@ -2,9 +2,39 @@ const express = require('express')
 const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
+const bcrypt = require('bcrypt')
+const connection = require('./config/database')
 
+app.use(require('body-parser').urlencoded({ extended: false }));
 app.use(express.static('public'))
 app.set('view engine', 'ejs')
+
+connection.connect()
+
+app.get('/register', (req, res)=> {
+  res.render('register')
+})
+
+app.post('/register', async (req, res)=> {
+  const { username, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 12)
+
+  connection.query(`SELECT * FROM user WHERE username = '${username}'`, (err, results)=> {
+    if(results.length > 0) {
+      const msg = "Account already registered"
+      res.render('register', { message: msg })
+    } else {
+      connection.query(`INSERT INTO user VALUES (0, '${username}', '${hashedPassword}')`, (err, results)=> {
+        if (err) {
+          const msg = err
+          res.render('register', { message: msg })
+        }
+
+        res.redirect('dashboard')
+      })
+    }
+  })
+})
 
 app.get('/:room', (req, res)=> {
   res.render('room', { room: req.params.room })
