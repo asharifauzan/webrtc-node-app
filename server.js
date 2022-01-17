@@ -99,6 +99,15 @@ app.post('/register', async (req, res)=> {
   })
 })
 
+app.get('/logout', (req, res)=> {
+  const session = req.session
+
+  session.destroy((err)=> {
+    if (err) res.redirect('/dashboard')
+    else res.redirect('/')
+  })
+})
+
 app.get('/dashboard', (req, res)=> {
   if (typeof req.session.user === "undefined") {
     res.redirect('/')
