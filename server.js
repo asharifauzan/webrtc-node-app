@@ -138,8 +138,22 @@ app.post('/room', (req, res)=> {
   })
 })
 
-app.get('/:room', (req, res)=> {
-  res.render('room', { room: req.params.room })
+app.get('/:username/:room', (req, res)=> {
+  // ensure the room have the owner
+  const { username, room } = req.params
+  connection.query(`SELECT room.id, room.room_name FROM user INNER JOIN room ON user.id = room.id_user WHERE user.username = '${username}' AND room.room_name = '${room}'`, (err, results)=> {
+    if (err) {
+      const msg = err
+      res.send(err)
+    }
+
+    if (results.length > 0) {
+      res.render('room', { room: req.params.room })
+    } else {
+      res.send("Room Not Found")
+    }
+
+  })
 })
 
 io.on('connection', (socket) => {
