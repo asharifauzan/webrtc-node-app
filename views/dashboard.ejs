@@ -43,7 +43,7 @@
                 <%= room.room_name %> 
               </td> 
               <th>
-                <a href="/<%= room.room_name %>" class="btn btn-danger btn-xs">Start</a>
+                <a href="/<%= `${room.username}/${room.room_name}` %>" class="btn btn-danger btn-xs">Start</a>
               </th>
             </tr>
     
