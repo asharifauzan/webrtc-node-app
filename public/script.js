@@ -132,7 +132,7 @@ function showVideoConference() {
 function leaveRoom() {
     rtcPeerConnection ? rtcPeerConnection.close() : null
     localStream.getTracks().forEach(track=> track.stop())
-    window.location = "dashboard"
+    window.location = "/dashboard"
 }
 
 async function setLocalStream(mediaConstraints) {
