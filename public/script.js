@@ -4,6 +4,8 @@ const roomInput = document.getElementById('room-input')
 const connectButton = document.getElementById('connect-button')
 
 const videoChatContainer = document.getElementById('video-chat-container')
+const localContainer = document.getElementById('local-container')
+const remoteContainer = document.getElementById('remote-container')
 const localVideoComponent = document.getElementById('local-video')
 const remoteVideoComponent = document.getElementById('remote-video')
 
@@ -51,6 +53,7 @@ socket.on('room_created', async () => {
 
 socket.on('user-left', remoteId=> {
   alert(remoteId + " telah keluar dari room")
+  remoteContainer.style.display = null
   remoteVideoComponent.srcObject = null
 })
 
@@ -186,6 +189,7 @@ async function createAnswer(rtcPeerConnection) {
 }
 
 function setRemoteStream(event) {
+  remoteContainer.style.display = "block"
   remoteVideoComponent.srcObject = event.streams[0]
   remoteStream = event.stream
 }

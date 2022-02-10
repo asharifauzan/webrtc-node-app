@@ -2,8 +2,12 @@
 
     <%- include('partials/navbar'), { room }  %> 
     <div id="video-chat-container" class="video-position" style="display: none">
-      <video id="local-video" class="rounded-lg" autoplay="autoplay" muted="muted"></video>
-      <video id="remote-video" autoplay="autoplay"></video>
+      <div id="local-container">
+        <video id="local-video" class="rounded-lg" autoplay="autoplay" muted="muted"></video>
+      </div>
+      <div id="remote-container">
+        <video id="remote-video" autoplay="autoplay"></video>
+      </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
