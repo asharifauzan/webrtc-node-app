@@ -142,6 +142,7 @@ async function setLocalStream(mediaConstraints) {
   let stream
   try {
     stream = await navigator.mediaDevices.getUserMedia(mediaConstraints)
+    localContainer.style.display = 'block'
   } catch (error) {
     console.error('Could not get user media', error)
   }
